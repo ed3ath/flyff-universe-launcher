@@ -1,1 +1,2 @@
-# Flyff Universe Launcher
+[Flyff Universe Launcher](https://github.com/ed3ath/flyff-universe-launcher) ![](https://img.shields.io/github/license/ed3ath/flyff-universe-launcher) ![](https://img.shields.io/github/stars/ed3ath/flyff-universe-launcher) ![](https://img.shields.io/github/forks/ed3ath/flyff-universe-launcher) ![](https://img.shields.io/github/issues/ed3ath/flyff-universe-launcher)
+==================================
