@@ -1,0 +1,49 @@
+html,body{
+    height: 90%
+}
+
+.main {
+    min-height: 100%;
+    position:relative;
+}
+
+.btn-play {
+    background-image: url('../img/buttonbg.png');
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: #fff;
+    filter: grayscale(.5);
+    font-weight: 900;
+    padding: 12px 10px 16px;
+    text-decoration: none;
+    transition: .2s;
+}
+
+.p-5 {
+    padding: 3rem!important;
+}
+
+.text-center {
+    text-align: center!important;
+}
+
+.content {
+    padding-bottom: 50px;
+}
+
+webview {
+  height: 85vh;
+}
+
+.footer {
+    height: 50px; 
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.btn {    
+  display: table;
+  margin: 0 auto
+}
