@@ -8,7 +8,6 @@
     "pack": "electron-builder --dir",
     "dist:win": "electron-builder --win",
     "dist:mac": "electron-builder --mac",
-    "deploy": "electron-builder --publish always",
     "postinstall": "install-app-deps"
   },
   "author": "eD3ath",
