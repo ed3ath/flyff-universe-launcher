@@ -5,6 +5,7 @@ const openAboutWindow = require("about-window").default;
 require('update-electron-app')()
 
 let mainWindow;
+let gameWindowCount = 0
 
 const createMainWindow = () => {
   mainWindow = new BrowserWindow({
@@ -25,6 +26,13 @@ const createMainWindow = () => {
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
   });
+
+  mainWindow.on('close', (event) => {
+    if (gameWindowCount > 0) {      
+      event.preventDefault();
+      mainWindow.hide();
+    }
+  })
 
   const appTray = new Tray(path.join(__dirname, "/assets/img/icon.ico"));
   appTray.setContextMenu(
@@ -130,6 +138,10 @@ const createGameWindow = () => {
     gameWindow.show();
   });
   gameWindow.maximize();
+  gameWindowCount += 1
+  gameWindow.on('close', () => {
+    gameWindowCount -= 1
+  })
 };
 
 ipcMain.handle("launch", async () => {
