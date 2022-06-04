@@ -4,17 +4,17 @@ const openAboutWindow = require("about-window").default;
 const logger = require("electron-log");
 const isDev = require("electron-is-dev");
 const { autoUpdater } = require("electron-updater");
-require('dotenv').config()
+require("dotenv").config();
 
 let mainWindow;
 let gameWindowCount = 0;
 
 autoUpdater.setFeedURL({
-  provider: 'github',
-  owner: 'ed3ath',
-  repo: 'flyff-universe-launcher',
-  token: process.env.TOKEN
-})
+  provider: "github",
+  owner: "ed3ath",
+  repo: "flyff-universe-launcher",
+  token: process.env.TOKEN,
+});
 
 const createMainWindow = () => {
   mainWindow = new BrowserWindow({
@@ -69,6 +69,7 @@ const createMainWindow = () => {
 
   if (!isDev) {
     autoUpdater.checkForUpdates();
+    setInterval(autoUpdater.checkForUpdates, 1800000);
   }
 };
 
@@ -87,6 +88,17 @@ const createWikiWindow = (type) => {
   });
 };
 
+/*const createMarketplaceWindow = (type) => {};*/
+
+const alert = (msg) => {
+  dialog.showMessageBox({
+    type: "info",
+    title: "Coming soon",
+    detail:
+      "This feature will be available soon.",
+  })
+}
+
 const createGameWindow = () => {
   const gameWindow = new BrowserWindow({
     show: false,
@@ -102,22 +114,38 @@ const createGameWindow = () => {
       submenu: [
         {
           label: "Item List",
-          click: () => {
-            createWikiWindow("items");
-          },
+          click: () => createWikiWindow("items"),
         },
         {
           label: "Monster List",
-          click: () => {
-            createWikiWindow("monsters");
-          },
+          click: () => createWikiWindow("monsters"),
         },
         {
           label: "Quest Guide",
-          click: () => {
-            createWikiWindow("quests");
-          },
+          click: () => createWikiWindow("quests"),
         },
+      ],
+    },
+    {
+      label: "Extras",
+      submenu: [
+        {
+          label: "Marketplace",
+          submenu: [
+            {
+              label: "Browse Listing",
+              click: () => alert('coming soon')
+            },
+            {
+              label: "Add Listing",
+              click: () => alert('coming soon')
+            },
+          ],
+        },
+        {
+          label: "Chat",
+          click: () => alert('coming soon')
+        }
       ],
     },
     {
@@ -128,6 +156,17 @@ const createGameWindow = () => {
           click: () => {
             gameWindow.webContents.reloadIgnoringCache();
           },
+        },
+        {
+          label: "Options",
+          submenu: [
+            {
+              label: "Toggle Fullscreen",
+              click: () => {
+                gameWindow.fullScreen = gameWindow.isFullScreen() ? false : true;
+              },
+            },
+          ],
         },
         {
           label: "About",
@@ -143,17 +182,6 @@ const createGameWindow = () => {
               },
               show_close_button: "Close",
             });
-          },
-        },
-      ],
-    },
-    {
-      label: "Options",
-      submenu: [
-        {
-          label: "Toggle Fullscreen",
-          click: () => {
-            gameWindow.fullScreen = gameWindow.isFullScreen() ? false : true;
           },
         },
       ],
