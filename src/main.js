@@ -185,7 +185,6 @@ const createGameWindow = () => {
             openAboutWindow({
               product_name: "Flyff Universe Launcher",
               icon_path: path.join(__dirname, "/assets/img/icon.png"),
-              copyright: "Copyright (c) 2022 eD3ath",
               use_version_info: true,
               win_options: {
                 parent: gameWindow,
