@@ -1,4 +1,4 @@
-const { app, ipcMain, BrowserWindow, Menu, Tray } = require("electron");
+const { app, ipcMain, BrowserWindow, Menu, Tray, dialog } = require("electron");
 const path = require("path");
 const openAboutWindow = require("about-window").default;
 const logger = require("electron-log");
@@ -203,14 +203,6 @@ app.on("activate", () => {
   }
 });
 
-autoUpdater.on("checking-for-update", () => {
-  logger.log("checking for update");
-});
-
-autoUpdater.on("update-not-available", () => {
-  logger.log("no available update");
-});
-
 autoUpdater.on("error", (message) => {
   logger.error("There was a problem updating the application");
   logger.error(message);
@@ -237,6 +229,9 @@ autoUpdater.on("update-downloaded", (_event, releaseNotes, releaseName) => {
       "A new version has been downloaded. Restart the application to apply the updates.",
   };
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall();
+    if (returnValue.response === 0) {
+      gameWindowCount = 0;
+      autoUpdater.quitAndInstall();
+    }
   });
 });
