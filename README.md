@@ -8,6 +8,6 @@
 * Wiki (No need to open browser)
 
 ## Supported Platforms
-- [x] [Windows](https://github.com/ed3ath/flyff-universe-launcher/releases/download/v1.0.1/Flyff.Universe.Launcher.Setup.1.0.1.exe)
+- [x] [Windows](https://github.com/ed3ath/flyff-universe-launcher/releases/latest)
 - [ ] Linux
 - [ ] Mac
