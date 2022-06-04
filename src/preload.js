@@ -1,8 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-let updateAvailable = false;
-
 contextBridge.exposeInMainWorld('helper', {
-    launch: () => !updateAvailable ? ipcRenderer.invoke('launch') : null,
+    launch: () => ipcRenderer.invoke('launch'),
     hide: () => ipcRenderer.invoke('hideMain')
 });
