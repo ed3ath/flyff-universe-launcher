@@ -4,17 +4,17 @@ const openAboutWindow = require("about-window").default;
 const logger = require("electron-log");
 const isDev = require("electron-is-dev");
 const { autoUpdater } = require("electron-updater");
-require('dotenv').config()
+require("dotenv").config();
 
 let mainWindow;
 let gameWindowCount = 0;
 
 autoUpdater.setFeedURL({
-  provider: 'github',
-  owner: 'ed3ath',
-  repo: 'flyff-universe-launcher',
-  token: process.env.TOKEN
-})
+  provider: "github",
+  owner: "ed3ath",
+  repo: "flyff-universe-launcher",
+  token: process.env.TOKEN,
+});
 
 const createMainWindow = () => {
   mainWindow = new BrowserWindow({
@@ -69,6 +69,7 @@ const createMainWindow = () => {
 
   if (!isDev) {
     autoUpdater.checkForUpdates();
+    setInterval(autoUpdater.checkForUpdates, 1800000);
   }
 };
 
@@ -87,6 +88,16 @@ const createWikiWindow = (type) => {
   });
 };
 
+/*const createMarketplaceWindow = (type) => {};*/
+
+const alert = (msg) => {
+  dialog.showMessageBox({
+    type: "info",
+    title: "Coming soon",
+    detail: "This feature will be available soon.",
+  });
+};
+
 const createGameWindow = () => {
   const gameWindow = new BrowserWindow({
     show: false,
@@ -98,24 +109,63 @@ const createGameWindow = () => {
 
   const mainMenuTemplate = [
     {
-      label: "Wiki",
+      label: "Features",
       submenu: [
         {
-          label: "Item List",
-          click: () => {
-            createWikiWindow("items");
-          },
+          label: "Wiki",
+          submenu: [
+            {
+              label: "Item List",
+              click: () => {
+                createWikiWindow("items");
+              },
+            },
+            {
+              label: "Monster List",
+              click: () => {
+                createWikiWindow("monsters");
+              },
+            },
+            {
+              label: "Quest Guide",
+              click: () => {
+                createWikiWindow("quests");
+              },
+            },
+          ],
         },
         {
-          label: "Monster List",
-          click: () => {
-            createWikiWindow("monsters");
-          },
+          label: "Marketplace",
+          submenu: [
+            {
+              label: "Browse Listing",
+              click: () => {
+                alert("coming soon");
+              },
+            },
+            {
+              label: "Add Listing",
+              click: () => {
+                alert("coming soon");
+              },
+            },
+          ],
         },
         {
-          label: "Quest Guide",
+          label: "Chat",
           click: () => {
-            createWikiWindow("quests");
+            alert("coming soon");
+          },
+        },
+      ],
+    },
+    {
+      label: "Options",
+      submenu: [
+        {
+          label: "Toggle Fullscreen",
+          click: () => {
+            gameWindow.fullScreen = gameWindow.isFullScreen() ? false : true;
           },
         },
       ],
@@ -143,17 +193,6 @@ const createGameWindow = () => {
               },
               show_close_button: "Close",
             });
-          },
-        },
-      ],
-    },
-    {
-      label: "Options",
-      submenu: [
-        {
-          label: "Toggle Fullscreen",
-          click: () => {
-            gameWindow.fullScreen = gameWindow.isFullScreen() ? false : true;
           },
         },
       ],
