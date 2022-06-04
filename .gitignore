@@ -2,3 +2,5 @@ node_modules/
 dist/
 electron-builder.yml
 package-lock.json
+out/
+.env

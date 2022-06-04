@@ -1,11 +1,20 @@
 const { app, ipcMain, BrowserWindow, Menu, Tray } = require("electron");
 const path = require("path");
 const openAboutWindow = require("about-window").default;
-
-require('update-electron-app')()
+const logger = require("electron-log");
+const isDev = require("electron-is-dev");
+const { autoUpdater } = require("electron-updater");
+require('dotenv').config()
 
 let mainWindow;
-let gameWindowCount = 0
+let gameWindowCount = 0;
+
+autoUpdater.setFeedURL({
+  provider: 'github',
+  owner: 'ed3ath',
+  repo: 'flyff-universe-launcher',
+  token: process.env.TOKEN
+})
 
 const createMainWindow = () => {
   mainWindow = new BrowserWindow({
@@ -21,18 +30,18 @@ const createMainWindow = () => {
   });
   mainWindow.setIcon(path.join(__dirname, "/assets/img/icon.ico"));
 
-  mainWindow.loadFile("index.html");
+  mainWindow.loadFile(path.join(__dirname, "/index.html"));
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
   });
 
-  mainWindow.on('close', (event) => {
-    if (gameWindowCount > 0) {      
+  mainWindow.on("close", (event) => {
+    if (gameWindowCount > 0) {
       event.preventDefault();
       mainWindow.hide();
     }
-  })
+  });
 
   const appTray = new Tray(path.join(__dirname, "/assets/img/icon.ico"));
   appTray.setContextMenu(
@@ -53,6 +62,14 @@ const createMainWindow = () => {
   );
 
   mainWindow.tray = appTray;
+
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
+
+  if (!isDev) {
+    autoUpdater.checkForUpdates();
+  }
 };
 
 const createWikiWindow = (type) => {
@@ -130,6 +147,17 @@ const createGameWindow = () => {
         },
       ],
     },
+    {
+      label: "Options",
+      submenu: [
+        {
+          label: "Toggle Fullscreen",
+          click: () => {
+            gameWindow.fullScreen = gameWindow.isFullScreen() ? false : true;
+          },
+        },
+      ],
+    },
   ];
   const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
   Menu.setApplicationMenu(mainMenu);
@@ -137,11 +165,18 @@ const createGameWindow = () => {
   gameWindow.once("ready-to-show", () => {
     gameWindow.show();
   });
+
+  gameWindow.webContents.on("before-input-event", (event, input) => {
+    if (input.key.toLowerCase() === "Escape") {
+      event.preventDefault();
+    }
+  });
+
   gameWindow.maximize();
-  gameWindowCount += 1
-  gameWindow.on('close', () => {
-    gameWindowCount -= 1
-  })
+  gameWindowCount += 1;
+  gameWindow.on("close", () => {
+    gameWindowCount -= 1;
+  });
 };
 
 ipcMain.handle("launch", async () => {
@@ -158,7 +193,7 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on('ready', function()  {
+app.on("ready", function () {
   createMainWindow();
 });
 
@@ -166,4 +201,42 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createMainWindow();
   }
+});
+
+autoUpdater.on("checking-for-update", () => {
+  logger.log("checking for update");
+});
+
+autoUpdater.on("update-not-available", () => {
+  logger.log("no available update");
+});
+
+autoUpdater.on("error", (message) => {
+  logger.error("There was a problem updating the application");
+  logger.error(message);
+});
+
+autoUpdater.on("update-available", (_event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: "info",
+    buttons: ["Ok"],
+    title: "Application Update",
+    message: process.platform === "win32" ? releaseNotes : releaseName,
+    detail: "A new version is being downloaded.",
+  };
+  dialog.showMessageBox(dialogOpts, (response) => {});
+});
+
+autoUpdater.on("update-downloaded", (_event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: "info",
+    buttons: ["Restart", "Later"],
+    title: "Application Update",
+    message: process.platform === "win32" ? releaseNotes : releaseName,
+    detail:
+      "A new version has been downloaded. Restart the application to apply the updates.",
+  };
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall();
+  });
 });

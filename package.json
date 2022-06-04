@@ -1,28 +1,31 @@
 {
   "name": "flyff-universe-launcher",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Flyff Universe Launcher by eD3ath",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist:win": "electron-builder --win",
     "dist:mac": "electron-builder --mac",
+    "deploy:win": "electron-builder --win --publish always",
     "postinstall": "install-app-deps"
   },
   "author": "eD3ath",
   "license": "GPL-3.0",
   "devDependencies": {
     "electron": "^19.0.1",
-    "electron-builder": "^23.0.3",
-    "electron-packager": "^15.5.1"
+    "electron-builder": "^23.0.3"
   },
   "dependencies": {
     "about-window": "^1.15.2",
-    "update-electron-app": "^2.0.1"
+    "electron-builder-squirrel-windows": "^23.1.0",
+    "electron-is-dev": "^2.0.0",
+    "electron-log": "^4.4.7",
+    "electron-updater": "^5.0.1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ed3ath/flyff-universe-launcher.git"
+    "url": "https://github.com/ed3ath/flyff-universe-launcher"
   }
 }
