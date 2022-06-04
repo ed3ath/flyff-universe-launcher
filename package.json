@@ -7,8 +7,11 @@
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux",
     "dist:mac": "electron-builder --mac",
     "deploy:win": "electron-builder --win --publish always",
+    "deploy:linux": "electron-builder --linux --publish always",
+    "deploy:mac": "electron-builder --mac --publish always",
     "postinstall": "install-app-deps"
   },
   "author": "eD3ath",
