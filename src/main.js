@@ -94,10 +94,9 @@ const alert = (msg) => {
   dialog.showMessageBox({
     type: "info",
     title: "Coming soon",
-    detail:
-      "This feature will be available soon.",
-  })
-}
+    detail: "This feature will be available soon.",
+  });
+};
 
 const createGameWindow = () => {
   const gameWindow = new BrowserWindow({
@@ -110,42 +109,65 @@ const createGameWindow = () => {
 
   const mainMenuTemplate = [
     {
-      label: "Wiki",
+      label: "Features",
       submenu: [
         {
-          label: "Item List",
-          click: () => createWikiWindow("items"),
+          label: "Wiki",
+          submenu: [
+            {
+              label: "Item List",
+              click: () => {
+                createWikiWindow("items");
+              },
+            },
+            {
+              label: "Monster List",
+              click: () => {
+                createWikiWindow("monsters");
+              },
+            },
+            {
+              label: "Quest Guide",
+              click: () => {
+                createWikiWindow("quests");
+              },
+            },
+          ],
         },
-        {
-          label: "Monster List",
-          click: () => createWikiWindow("monsters"),
-        },
-        {
-          label: "Quest Guide",
-          click: () => createWikiWindow("quests"),
-        },
-      ],
-    },
-    {
-      label: "Extras",
-      submenu: [
         {
           label: "Marketplace",
           submenu: [
             {
               label: "Browse Listing",
-              click: () => alert('coming soon')
+              click: () => {
+                alert("coming soon");
+              },
             },
             {
               label: "Add Listing",
-              click: () => alert('coming soon')
+              click: () => {
+                alert("coming soon");
+              },
             },
           ],
         },
         {
           label: "Chat",
-          click: () => alert('coming soon')
-        }
+          click: () => {
+            alert("coming soon");
+          },
+        },
+      ],
+    },
+    {
+      label: "Options",
+      submenu: [
+        {
+          label: "Toggle Fullscreen",
+          click: () => {
+            gameWindow.fullScreen = gameWindow.isFullScreen() ? false : true;
+          },
+        },
       ],
     },
     {
@@ -156,17 +178,6 @@ const createGameWindow = () => {
           click: () => {
             gameWindow.webContents.reloadIgnoringCache();
           },
-        },
-        {
-          label: "Options",
-          submenu: [
-            {
-              label: "Toggle Fullscreen",
-              click: () => {
-                gameWindow.fullScreen = gameWindow.isFullScreen() ? false : true;
-              },
-            },
-          ],
         },
         {
           label: "About",
