@@ -11,3 +11,6 @@
 - [x] [Windows](https://github.com/ed3ath/flyff-universe-launcher/releases/latest)
 - [ ] Linux
 - [ ] Mac
+
+## License
+GPL-3.0
