@@ -4,10 +4,17 @@ const openAboutWindow = require("about-window").default;
 const logger = require("electron-log");
 const isDev = require("electron-is-dev");
 const { autoUpdater } = require("electron-updater");
+const tcpp = require("tcp-ping");
+
 require("dotenv").config();
 
 let mainWindow;
 let gameWindowCount = 0;
+let servers = {
+  Lawolf: "srv02-universe.flyff.com",
+  Mia: "srv03-universe.flyff.com",
+  Glaphan: "srv04-universe.flyff.com",
+};
 
 autoUpdater.setFeedURL({
   provider: "github",
@@ -15,6 +22,15 @@ autoUpdater.setFeedURL({
   repo: "flyff-universe-launcher",
   token: process.env.TOKEN,
 });
+
+function ping(address, port) {
+  return new Promise(function(resolve, reject) {
+    tcpp.ping({ address, port }, function(err, data) {
+        if (err) reject(err);
+        else resolve(data);
+    });
+  });
+}
 
 const createMainWindow = () => {
   mainWindow = new BrowserWindow({
@@ -70,7 +86,7 @@ const createMainWindow = () => {
   if (!isDev) {
     autoUpdater.checkForUpdates();
     setInterval(() => {
-      autoUpdater.checkForUpdates()
+      autoUpdater.checkForUpdates();
     }, 1800000);
   }
 };
@@ -92,7 +108,7 @@ const createWikiWindow = (type) => {
 
 /*const createMarketplaceWindow = (type) => {};*/
 
-const alert = (msg) => {
+const alert = () => {
   dialog.showMessageBox({
     type: "info",
     title: "Coming soon",
@@ -142,13 +158,13 @@ const createGameWindow = () => {
             {
               label: "Browse Listing",
               click: () => {
-                alert("coming soon");
+                alert();
               },
             },
             {
               label: "Add Listing",
               click: () => {
-                alert("coming soon");
+                alert();
               },
             },
           ],
@@ -156,7 +172,25 @@ const createGameWindow = () => {
         {
           label: "Chat",
           click: () => {
-            alert("coming soon");
+            alert();
+          },
+        },
+        {
+          label: "Server List",
+          click: async () => {
+            const result = await Promise.all(Object.keys(servers).map(async (address) => {
+              const data = await ping(servers[address], 443);
+              return {
+                server: address,
+                ping: Math.floor(data.avg)
+              }
+            }));
+            const dialogOpts = {
+              type: "none",
+              title: "Server List",
+              message: `${result.map(data => `${data.server}: ${data.ping} ms`).join("\n")}`
+            };
+            dialog.showMessageBox(dialogOpts);
           },
         },
       ],
@@ -214,8 +248,20 @@ const createGameWindow = () => {
 
   gameWindow.maximize();
   gameWindowCount += 1;
-  gameWindow.on("close", () => {
-    gameWindowCount -= 1;
+  gameWindow.on("close", (event) => {
+    const dialogOpts = {
+      type: "warning",
+      buttons: ["Exit", "Cancel"],
+      title: "Game Closing",
+      message: "You are about to close the game.",
+    };
+    dialog.showMessageBox(dialogOpts).then((returnValue) => {
+      if (returnValue.response === 0) {
+        gameWindowCount -= 1;
+      } else {
+        event.preventDefault();
+      }
+    });
   });
 };
 
@@ -256,7 +302,7 @@ autoUpdater.on("update-available", (_event, releaseNotes, releaseName) => {
     message: process.platform === "win32" ? releaseNotes : releaseName,
     detail: "A new version is being downloaded.",
   };
-  dialog.showMessageBox(dialogOpts, (response) => {});
+  dialog.showMessageBox(dialogOpts);
 });
 
 autoUpdater.on("update-downloaded", (_event, releaseNotes, releaseName) => {
