@@ -249,6 +249,7 @@ const createGameWindow = () => {
   gameWindow.maximize();
   gameWindowCount += 1;
   gameWindow.on("close", (event) => {
+    event.preventDefault();
     const dialogOpts = {
       type: "warning",
       buttons: ["Exit", "Cancel"],
@@ -258,8 +259,7 @@ const createGameWindow = () => {
     dialog.showMessageBox(dialogOpts).then((returnValue) => {
       if (returnValue.response === 0) {
         gameWindowCount -= 1;
-      } else {
-        event.preventDefault();
+        gameWindow.destroy();
       }
     });
   });
