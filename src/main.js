@@ -69,7 +69,9 @@ const createMainWindow = () => {
 
   if (!isDev) {
     autoUpdater.checkForUpdates();
-    setInterval(autoUpdater.checkForUpdates, 1800000);
+    setInterval(() => {
+      autoUpdater.checkForUpdates()
+    }, 1800000);
   }
 };
 
