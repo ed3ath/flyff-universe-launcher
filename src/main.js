@@ -233,8 +233,8 @@ const createGameWindow = () => {
       ],
     },
   ];
-  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-  Menu.setApplicationMenu(mainMenu);
+  
+  gameWindow.setMenu(Menu.buildFromTemplate(mainMenuTemplate));
 
   gameWindow.once("ready-to-show", () => {
     gameWindow.show();

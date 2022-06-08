@@ -1,6 +1,6 @@
 {
   "name": "flyff-universe-launcher",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Flyff Universe Launcher by eD3ath",
   "main": "src/main.js",
   "scripts": {
